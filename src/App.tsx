@@ -14,12 +14,11 @@ function App() {
     setTimeout(() => resolve(), 3000)
   })
   
-  const robot1: IRobot = { 'id': '1', 'busy': false };
-  const robot2: IRobot = { 'id': '2', 'busy': false };
+
   
   return (
     <Container className="h-100">
-      <Factory robotList={[robot1, robot2]} />
+      <Factory />
       <Dashboard />
 
     </Container>

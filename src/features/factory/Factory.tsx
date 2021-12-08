@@ -11,18 +11,17 @@ import produce from 'immer';
 import Dashboard from './Dashboard';
 
 interface IFactoryProps {
-  robotList: IRobot[]
 }
 
-const Factory: React.FC<IFactoryProps> = ({ robotList}) => {
+const Factory: React.FC<IFactoryProps> = () => {
   return <Row>
-      <Col>
+      <Col className="text-primary">
         <FooMiningLine/>
       </Col>
-      <Col>
+      <Col className="text-warning">
         <BarMiningLine/>
       </Col>
-      <Col>
+      <Col className="text-danger">
         <FoobarCraftingLine />
       </Col>
       <Col>

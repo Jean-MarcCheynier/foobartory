@@ -31,8 +31,8 @@ export interface FactoryState {
 }
 
 const getInitialState = (): FactoryState => {
-  const robot1: IRobot = { 'id': 'a', 'busy': false };
-  const robot2: IRobot = { 'id': 'b', 'busy': false };
+  const robot1: IRobot = { 'id': 'a', 'busy': false, changingActivity: false };
+  const robot2: IRobot = { 'id': 'b', 'busy': false, changingActivity: false };
   return {
     robotMap: {
       [robot1.id]: robot1,
@@ -119,10 +119,6 @@ export const factorySlice = createSlice({
         state.prod.foo = [...state.prod.foo, action.payload];
         state.robotMap[meta.arg.robot.id].busy = false;
       })
-      .addCase(mineFoo.rejected, (state, action) => {
-        const { meta } = action;
-        state.robotMap[meta.arg.robot.id].busy = false;
-      })
       //Mine Bar Reducers
       .addCase(mineBar.pending, (state, action) => {
         const { meta } = action;
@@ -133,35 +129,29 @@ export const factorySlice = createSlice({
         state.prod.bar = [...state.prod.bar, action.payload];
         state.robotMap[meta.arg.robot.id].busy = false;
       })
-      .addCase(mineBar.rejected, (state, action) => {
-        const { meta } = action;
-        state.robotMap[meta.arg.robot.id].busy = false;
-      })
       //Change Line Bar Reducers
       .addCase(changeLine.pending, (state, action) => {
         const { meta } = action;
         const robotId = meta.arg.robotId;
-        state.line[LineEnum.FOO_MINING] = state.line[LineEnum.FOO_MINING].filter( id => id !== robotId)
+        const destination = meta.arg.line;
+        state.robotMap[meta.arg.robotId].changingActivity = true;
+        //TODO : Simplify
+        state.line[LineEnum.FOO_MINING] = state.line[LineEnum.FOO_MINING].filter(id => id !== robotId)
+        state.line[LineEnum.BAR_MINING] = state.line[LineEnum.BAR_MINING].filter(id => id !== robotId)
+        state.line[LineEnum.FOOBAR_CRAFTING] = state.line[LineEnum.FOOBAR_CRAFTING].filter(id => id !== robotId)
+        state.line[LineEnum.SHOPPING] = state.line[LineEnum.SHOPPING].filter(id => id !== robotId)
+        state.line[destination].push(robotId)
       })
       .addCase(changeLine.fulfilled, (state, action) => {
         const { meta } = action;
         const robotId = meta.arg.robotId;
-        const destination = meta.arg.line;
-        console.log(destination)
-        state.line[destination].push(robotId)
+        state.robotMap[meta.arg.robotId].changingActivity = false;
       })
-      .addCase(changeLine.rejected, (state, action) => {
-        const { meta } = action;
-        state.robotMap[meta.arg.robotId].busy = false;
-      });
   },
 });
 
 export const { reset } = factorySlice.actions;
 
-// The function below is called a selector and allows us to select a value from
-// the state. Selectors can also be defined inline where they're used instead of
-// in the slice file. For example: `useSelector((state: RootState) => state.counter.value)`
 export const selectFooMiners = (state: RootState): IRobot[] => {
   return state.factory.line[LineEnum.FOO_MINING]
     .map((robotId: string) => state.factory.robotMap[robotId])
@@ -183,8 +173,5 @@ export const selectShoppers = (state: RootState): IRobot[]  => {
 }
 
 export const selectProd = (state: RootState) => state.factory.prod;
-
-// We can also write thunks by hand, which may contain both sync and async logic.
-// Here's an example of conditionally dispatching actions based on current state.
 
 export default factorySlice.reducer;
