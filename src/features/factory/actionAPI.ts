@@ -22,7 +22,7 @@ export function mineBar() {
 }
 
 // A mock function to mimic making a request for swapping activity
-export function swapActivity() {
+export function changeLine() {
   return new Promise<void>((resolve) =>
     setTimeout(() => resolve(), rules.ACTIVITY_SWAPPING_TIME)
   );

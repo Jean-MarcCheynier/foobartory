@@ -53,10 +53,10 @@ const getInitialState = (): FactoryState => {
   }
 };
 
-export const swapActivity = createAsyncThunk(
-  'action/swapActivity',
-  async (args: { robot: IRobot, line: LineEnum }) => {
-    await API.swapActivity();
+export const changeLine = createAsyncThunk(
+  'action/changeLine',
+  async (args: { robotId: string, line: LineEnum }) => {
+    await API.changeLine();
     // The value we return becomes the `fulfilled` action payload
     return;
   }
@@ -130,12 +130,29 @@ export const factorySlice = createSlice({
       })
       .addCase(mineBar.fulfilled, (state, action) => {
         const { meta } = action;
-        state.prod.foo = [...state.prod.foo, action.payload];
+        state.prod.bar = [...state.prod.bar, action.payload];
         state.robotMap[meta.arg.robot.id].busy = false;
       })
       .addCase(mineBar.rejected, (state, action) => {
         const { meta } = action;
         state.robotMap[meta.arg.robot.id].busy = false;
+      })
+      //Change Line Bar Reducers
+      .addCase(changeLine.pending, (state, action) => {
+        const { meta } = action;
+        const robotId = meta.arg.robotId;
+        state.line[LineEnum.FOO_MINING] = state.line[LineEnum.FOO_MINING].filter( id => id !== robotId)
+      })
+      .addCase(changeLine.fulfilled, (state, action) => {
+        const { meta } = action;
+        const robotId = meta.arg.robotId;
+        const destination = meta.arg.line;
+        console.log(destination)
+        state.line[destination].push(robotId)
+      })
+      .addCase(changeLine.rejected, (state, action) => {
+        const { meta } = action;
+        state.robotMap[meta.arg.robotId].busy = false;
       });
   },
 });

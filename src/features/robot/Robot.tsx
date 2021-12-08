@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import React from 'react';
-import { Button } from 'react-bootstrap';
+import { Button, ButtonGroup, Dropdown, DropdownButton } from 'react-bootstrap';
 import { IRobot } from '../../interfaces/Robot';
+import { LineEnum } from '../factory/factorySlice';
 
 /**
  * A robot component recieves a function 'action' which returns a promise
@@ -10,9 +11,10 @@ import { IRobot } from '../../interfaces/Robot';
  */
 interface IRobotProps extends IRobot {
   action: () => Promise<any>
+  changeLine: (args: { 'robotId': string, 'line': LineEnum }) => Promise<any>
 }
 
-const Robot: React.FC<IRobotProps> = ({ action, busy }) => {
+const Robot: React.FC<IRobotProps> = ({ id, action, changeLine, busy }) => {
   
   const [working, setWorking] = useState(false);
   
@@ -23,7 +25,16 @@ const Robot: React.FC<IRobotProps> = ({ action, busy }) => {
   
   return <div>
     <h2>Robot</h2>
-    <Button disabled={busy} name="work" onClick={handleOnClick}>Work</Button>
+    <ButtonGroup aria-label="robot-control">
+      <Button disabled={busy} name="work" onClick={handleOnClick}>Work</Button>
+      <DropdownButton as={ButtonGroup} title="Dropdown" id="bg-nested-dropdown">
+        <Dropdown.Item onClick={() => changeLine({ robotId: id, line: LineEnum.FOO_MINING })}>{`Go to ${LineEnum.FOO_MINING}`}</Dropdown.Item>
+        <Dropdown.Item onClick={() => changeLine({ robotId: id, line: LineEnum.BAR_MINING })}>{`Go to ${LineEnum.BAR_MINING}`}</Dropdown.Item>
+        <Dropdown.Item onClick={() => changeLine({ robotId: id, line: LineEnum.FOOBAR_CRAFTING })}>{`Go to ${LineEnum.FOOBAR_CRAFTING}`}</Dropdown.Item>
+        <Dropdown.Item onClick={() => changeLine({ robotId: id, line: LineEnum.SHOPPING })}>{`Go to ${LineEnum.SHOPPING}`}</Dropdown.Item>
+      </DropdownButton>
+    </ButtonGroup>
+    
   </div>
 }
 

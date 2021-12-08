@@ -15,8 +15,7 @@ interface IFactoryProps {
 }
 
 const Factory: React.FC<IFactoryProps> = ({ robotList}) => {
-  return <Container>
-  <Row>
+  return <Row>
       <Col>
         <FooMiningLine/>
       </Col>
@@ -30,10 +29,6 @@ const Factory: React.FC<IFactoryProps> = ({ robotList}) => {
         <ShoppingLine />
       </Col>
     </Row>
-    <Row>
-      <Dashboard/>
-    </Row>
-  </Container>
 }
 
 export default Factory;

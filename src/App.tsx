@@ -5,6 +5,8 @@ import './App.css';
 import Robot from './features/robot/Robot';
 import Factory from './features/factory/Factory';
 import { IRobot } from './interfaces/Robot';
+import { Container } from 'react-bootstrap';
+import Dashboard from './features/factory/Dashboard';
 
 function App() {
   
@@ -16,9 +18,11 @@ function App() {
   const robot2: IRobot = { 'id': '2', 'busy': false };
   
   return (
-    <div className="Foobartory">
+    <Container className="h-100">
       <Factory robotList={[robot1, robot2]} />
-    </div>
+      <Dashboard />
+
+    </Container>
   );
 }
 
