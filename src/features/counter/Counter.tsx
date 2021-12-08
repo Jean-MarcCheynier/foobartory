@@ -10,6 +10,7 @@ import {
   selectCount,
 } from './counterSlice';
 import styles from './Counter.module.css';
+import { Button } from 'react-bootstrap';
 
 export function Counter() {
   const count = useAppSelector(selectCount);
@@ -21,13 +22,13 @@ export function Counter() {
   return (
     <div>
       <div className={styles.row}>
-        <button
-          className={styles.button}
+        <Button
+          variant="primary"
           aria-label="Decrement value"
           onClick={() => dispatch(decrement())}
         >
           -
-        </button>
+        </Button>
         <span className={styles.value}>{count}</span>
         <button
           className={styles.button}
