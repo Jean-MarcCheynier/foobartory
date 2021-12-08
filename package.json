@@ -1,5 +1,8 @@
 {
   "name": "foobartory",
+  "author": {
+    "name": "Jean-Marc Cheynier"
+  },
   "version": "0.1.0",
   "private": true,
   "dependencies": {
