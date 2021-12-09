@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { RootState } from '../../app/store';
-import { FactoryState, LineEnum, selectProd } from './factorySlice';
+import { FactoryState, selectProd } from './factorySlice';
 import { Row, Col } from 'react-bootstrap';
 
 type Prod = FactoryState['prod']

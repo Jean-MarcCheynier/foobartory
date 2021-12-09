@@ -7,6 +7,7 @@ import { Foobar } from '../../interfaces/Foobar';
 import { Foo } from '../../interfaces/Foo';
 import { Bar } from '../../interfaces/Bar';
 import { rules } from './../../utils/rules';
+import RobotFactory from './../../utils/RobotFactory';
 
 export enum LineEnum {
   FOO_MINING = 'fooMining',
@@ -35,8 +36,8 @@ export interface FactoryState {
 }
 
 const getInitialState = (): FactoryState => {
-  const robot1: IRobot = { 'id': 'a', 'busy': false, changingActivity: false, activity: LineEnum.FOO_MINING };
-  const robot2: IRobot = { 'id': 'b', 'busy': false, changingActivity: false, activity: LineEnum.FOO_MINING};
+  const robot1: IRobot = RobotFactory.createRobot(LineEnum.FOO_MINING);
+  const robot2: IRobot = RobotFactory.createRobot(LineEnum.BAR_MINING);
   return {
     robotMap: {
       [robot1.id]: robot1,
@@ -172,8 +173,15 @@ export const factorySlice = createSlice({
         }
       })
       //Buy robot Line Reducers
-      .addCase(changeLine.fulfilled, (state, action) => {
-        state.prod.robot.push(RobotFactory.createRobot())
+      .addCase(buyRobot.fulfilled, (state, action) => {
+        if(state.prod.foobar.length <= rules.ROBOT_PRICE) {
+          throw Error("No craft present in the workshop")
+        }else{  
+          const newRobot = RobotFactory.createRobot();
+          state.robotMap[newRobot.id] = newRobot;
+          state.prod.robot.push(newRobot.id)
+          state.prod.foobar.slice(0, rules.ROBOT_PRICE)
+        }
       })
       //Change Line Reducers
       .addCase(changeLine.pending, (state, action) => {

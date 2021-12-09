@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import React from 'react';
 import { Button, ButtonGroup, Card, Dropdown, DropdownButton, ProgressBar } from 'react-bootstrap';
 import { IRobot } from '../../interfaces/Robot';
@@ -17,9 +16,7 @@ interface IRobotProps extends IRobot {
 
 const Robot: React.FC<IRobotProps> = (props) => {
 
-  const { action, changeLine, id, busy, changingActivity }= props;
-  
-  const [working, setWorking] = useState(false);
+  const { action, changeLine, busy, changingActivity }= props;
   
   const onWorkClicked = () => {
     if(action) {
