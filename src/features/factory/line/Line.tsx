@@ -4,10 +4,10 @@ import { IRobot } from '../../../interfaces/Robot';
 import Robot from '../../robot/Robot';
 import { LineEnum, changeLine } from '../factorySlice';
 
-interface ILineProps {
+export interface ILineProps {
   activityName?: LineEnum,
-  activity: any,
-  changeLine: any,
+  activity?: (args: {robot: IRobot}) => Promise<any>,
+  changeLine?: (args: {robot: IRobot, line: LineEnum}) => Promise<any>,
   robotList: IRobot[]
 }
 
@@ -16,7 +16,10 @@ const Line: React.FC<ILineProps> = ({ robotList, activity, activityName, changeL
   return (<div>
     <h1>{ activityName }</h1>
     {robotList.map((robot, index) => (
-      <Robot key={index} action={() => activity({ robot })} {...robot} changeLine={changeLine} />)
+      <Robot key={index} 
+        {...robot} 
+        action={activity} 
+        changeLine={changeLine} />)
     )}
   </div>)
 }
