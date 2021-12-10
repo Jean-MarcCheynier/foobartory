@@ -22,7 +22,7 @@ export function mineBar() {
 }
 
 // A mock function to mimic making a request for swapping activity
-export function swapActivity() {
+export function changeLine() {
   return new Promise<void>((resolve) =>
     setTimeout(() => resolve(), rules.ACTIVITY_SWAPPING_TIME)
   );
@@ -47,7 +47,11 @@ export function craftFoobar() {
 // A mock function to mimic making a request for 'Foobar' crafting
 export function buyRobot() {
   return new Promise<{ data: IRobot }>((resolve, reject) => {
-    const newRobot: IRobot = { id: uuidv4(), busy: false }
+    const newRobot: IRobot = {
+      id: uuidv4(),
+      busy: false,
+      changingActivity: false
+    }
     resolve({ data: newRobot })
   });
 }
