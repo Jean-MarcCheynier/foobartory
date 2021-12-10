@@ -16,9 +16,10 @@ export function mineFoo() {
 // A mock function to mimic making a request for 'Bar' mining
 export function mineBar() {
   const newBar: Bar = {}
-  return new Promise<{ data: Bar }>((resolve) =>
-    setTimeout(() => resolve({ data: newBar }), rules.BAR_MINING_TIME)
-  );
+  return new Promise<{ data: Bar }>((resolve) => {
+    const miningTime = Math.random()*(rules.BAR_MINING_MAX_TIME - rules.BAR_MINING_MIN_TIME) + rules.BAR_MINING_MIN_TIME
+    setTimeout(() => resolve({ data: newBar }), miningTime)
+  });
 }
 
 // A mock function to mimic making a request for swapping activity
@@ -40,7 +41,7 @@ export function craftFoobar() {
       } else {
         reject()
       }
-    }, rules.BAR_MINING_TIME)
+    }, rules.FOOBAR_CRAFTING_TIME)
   );
 }
 

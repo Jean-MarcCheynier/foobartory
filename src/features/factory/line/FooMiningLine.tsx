@@ -1,6 +1,6 @@
 import { connect } from "react-redux"
 import { RootState } from "../../../app/store";
-import { mineFoo as activity, LineEnum,  selectFooMiners } from '../factorySlice'
+import { mineFoo as activity, selectFooMiners } from '../factorySlice'
 import Line from './Line';
 
 const actionCreators = {

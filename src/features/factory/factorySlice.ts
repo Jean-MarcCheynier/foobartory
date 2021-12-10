@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
 import * as API from './actionAPI';
-
 import { IRobot  } from '../../interfaces/Robot';
 import { Foobar } from '../../interfaces/Foobar';
 import { Foo } from '../../interfaces/Foo';
@@ -14,7 +13,7 @@ export enum LineEnum {
   BAR_MINING = 'barMining',
   FOOBAR_CRAFTING = 'foobarCrafting',
   SHOPPING = 'shopping',
-  BENCH = 'bench'
+  BENCH = 'benching'
 }
 
 export interface FactoryState {
@@ -52,12 +51,20 @@ const getInitialState = (): FactoryState => {
     prod: {
       foo: [],
       bar: [],
-      foobar: [{}],
+      foobar: [],
     },
     workshop: {
       craft: [],
       craftAttempts: 0
     }
+  }
+
+  for(let i =0; i < rules.NB_FOO_START; i++) {
+    initialState.prod.foo.push({})
+  }
+
+  for(let i =0; i < rules.NB_BAR_START; i++) {
+    initialState.prod.bar.push({})
   }
 
   for(let i =0; i < rules.NB_ROBOTS_START; i++) {
@@ -98,7 +105,7 @@ export const mineBar = createAsyncThunk(
 
 export const craftFoobar = createAsyncThunk(
   'action/craftFoobar',
-  async (args: { robot: IRobot }) => {
+  async (args: { robot: IRobot }, thunkAPI) => {
     const response = await API.craftFoobar();
     // The value we return becomes the `fulfilled` action payload
     return response.data;
@@ -127,27 +134,27 @@ export const factorySlice = createSlice({
     builder
       //Mine Foo Reducers
       .addCase(mineFoo.pending, (state, action) => {
-        const { meta } = action;
-        state.robotMap[meta.arg.robot.id].busy = true;
+        const { robot: ref } = action.meta.arg;
+        state.robotMap[ref.id].busy = true;
       })
       .addCase(mineFoo.fulfilled, (state, action) => {
-        const { meta } = action;
+        const { robot: ref } = action.meta.arg;
         state.prod.foo = [...state.prod.foo, action.payload];
-        state.robotMap[meta.arg.robot.id].busy = false;
+        state.robotMap[ref.id].busy = false;
       })
       //Mine Bar Reducers
       .addCase(mineBar.pending, (state, action) => {
-        const { meta } = action;
-        state.robotMap[meta.arg.robot.id].busy = true;
+        const { robot: ref } = action.meta.arg;
+        state.robotMap[ref.id].busy = true;
       })
       .addCase(mineBar.fulfilled, (state, action) => {
-        const { meta } = action;
+        const { robot: ref } = action.meta.arg;
         state.prod.bar = [...state.prod.bar, action.payload];
-        state.robotMap[meta.arg.robot.id].busy = false;
+        state.robotMap[ref.id].busy = false;
       })
       //Craft Foobar Reducers
       .addCase(craftFoobar.pending, (state, action) => {
-        const { meta } = action;
+        const { robot: ref } = action.meta.arg;
         if(state.prod.bar.length < rules.FOOBAR_CRAFTING_PRICE_BAR || state.prod.bar.length < rules.FOOBAR_CRAFTING_PRICE_BAR) {
           throw Error("Cannot perform reducer craftFoobar")
         }else{
@@ -155,17 +162,17 @@ export const factorySlice = createSlice({
           const barArray = state.prod.bar.splice(0, rules.FOOBAR_CRAFTING_PRICE_BAR);   
           state.workshop.craftAttempts++ 
           state.workshop.craft.push({foos: fooArray, bars: barArray }) 
-          state.robotMap[meta.arg.robot.id].busy = true;
+          state.robotMap[ref.id].busy = true;
         }
       })
       .addCase(craftFoobar.fulfilled, (state, action) => {
-        const { robot } = action.meta.arg;
+        const { robot: ref } = action.meta.arg;
         if(state.workshop.craft.length <= 0) {
           throw Error("No craft present in the workshop")
         }else{  
           state.workshop.craft.pop() 
           state.prod.foobar.push({});
-          state.robotMap[robot.id].busy = false;
+          state.robotMap[ref.id].busy = false;
         }
       })
       .addCase(craftFoobar.rejected, (state, action) => {
@@ -174,69 +181,71 @@ export const factorySlice = createSlice({
           throw Error("No craft present in the workshop")
         }else{  
           const failedCraft = state.workshop.craft.pop();
-          const reusableFoos = failedCraft?.foos || []
-          state.prod.foo = [ ...state.prod.foo, ...reusableFoos]
-          state.robotMap[robot.id].busy = false;
+          if(failedCraft) {
+            const reusableBar = failedCraft.bars
+            state.prod.bar = [ ...state.prod.bar, ...reusableBar]
+            state.robotMap[robot.id].busy = false;
+          } else {
+            throw new Error("Cannot reuse Bar")
+          }
+
         }
       })
       //Buy robot Line Reducers
-      .addCase(buyRobot.fulfilled, (state, action) => {
-        if(state.prod.foobar.length < rules.ROBOT_PRICE) {
-          throw Error("No craft present in the workshop")
-        }else{  
-          const newRobot = RobotFactory.createRobot();
-          state.robotMap[newRobot.id] = newRobot;
-          state.line[LineEnum.BENCH].push(newRobot.id)
-          state.prod.foobar.splice(0, rules.ROBOT_PRICE)
-        }
+      .addCase(buyRobot.pending, (state, action) => { 
+        state.prod.foobar.splice(0, rules.ROBOT_PRICE)       
+      })
+      .addCase(buyRobot.fulfilled, (state, action) => { 
+        const newRobot = RobotFactory.createRobot();
+        state.robotMap[newRobot.id] = newRobot;
+        state.line[LineEnum.BENCH].push(newRobot.id)     
       })
       //Change Line Reducers
       .addCase(changeLine.pending, (state, action) => {
-        const { meta } = action;
-        const { robot, line } = meta.arg;
+        const { robot: ref, line } = action.meta.arg;
+        // Get the current robot state from robotMap
+        const robot = state.robotMap[ref.id];
         if(robot.activity) {
           state.line[robot.activity] = state.line[robot.activity].filter(id => id !== robot.id)
         }
-        state.robotMap[robot.id] = { ...state.robotMap[robot.id], changingActivity: true, activity: undefined }
+        state.robotMap[robot.id] = { ...state.robotMap[robot.id], changingActivity: true, activity: line }
         state.line[line].push(robot.id)
       })
       .addCase(changeLine.fulfilled, (state, action) => {
-        const { meta } = action;
-        const { robot, line } = meta.arg;
-        state.robotMap[robot.id] = { ...state.robotMap[robot.id], changingActivity: false, activity: line }
+        const { robot: ref, line } = action.meta.arg;
+        state.robotMap[ref.id] = { ...state.robotMap[ref.id], changingActivity: false, activity: line }
       })
   },
 });
 
 export const { reset } = factorySlice.actions;
 
-export const selectFooMiners = (state: RootState): IRobot[] => {
-  return state.factory.line[LineEnum.FOO_MINING]
+
+/**Selectors **/
+const selectLine = (state: RootState, line: LineEnum): IRobot[] => {
+  return state.factory.line[line]
     .map((robotId: string) => state.factory.robotMap[robotId])
 }
+// Robot selectors
+export const selectFooMiners = (state: RootState) => selectLine(state, LineEnum.FOO_MINING)
+export const selectBarMiners = (state: RootState) => selectLine(state, LineEnum.BAR_MINING)
+export const selectFoobarCrafters = (state: RootState) => selectLine(state, LineEnum.FOOBAR_CRAFTING)
+export const selectShoppers = (state: RootState) => selectLine(state, LineEnum.SHOPPING)
+export const selectBench = (state: RootState) => selectLine(state, LineEnum.BENCH)
+export const selectAll = (state: RootState) => state.factory.robotMap;
 
-export const selectBarMiners = (state: RootState): IRobot[] => {
-  return state.factory.line[LineEnum.BAR_MINING]
-    .map((robotId: string) => state.factory.robotMap[robotId])
-}
-
-export const selectFoobarCrafters = (state: RootState): IRobot[] => {
-  return state.factory.line[LineEnum.FOOBAR_CRAFTING]
-    .map((robotId: string) => state.factory.robotMap[robotId])
-}
-
-export const selectShoppers = (state: RootState): IRobot[]  => {
-  return state.factory.line[LineEnum.SHOPPING]
-    .map((robotId: string) => state.factory.robotMap[robotId])
-}
-
-export const selectBench = (state: RootState): IRobot[] => {
-  return state.factory.line[LineEnum.BENCH]
-    .map((robotId: string) => state.factory.robotMap[robotId])
-}
-
+// Production selector
 export const selectProd = (state: RootState) => state.factory.prod;
 export const selectWorkshop = (state: RootState) => state.factory.workshop;
-export const selectAll = (state: RootState) => state.factory.robotMap;
+
+// Constraint selectors
+export type Constraint = (state: RootState) => boolean;
+export const canCraftFoobar:Constraint =  (state: RootState) => (
+  state.factory.prod.foo.length >= rules.FOOBAR_CRAFTING_PRICE_FOO && 
+  state.factory.prod.bar.length >= rules.FOOBAR_CRAFTING_PRICE_BAR )
+export const canBuyRobot:Constraint = (state: RootState) => ( state.factory.prod.foobar.length >= rules.ROBOT_PRICE )
+
+
+
 
 export default factorySlice.reducer;

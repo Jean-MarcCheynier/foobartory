@@ -9,10 +9,30 @@
     color: $line-color; 
 }
 
-.Line {
-    @include line($blue-300);
+.Robot {
+    min-height: '120px';
+    width: '200px';
+    .Button {
+        &--fooMining {
+            background-color: $fooMiningColor;
+        }
+        &--barMining {
+            background-color: $barMiningColor;  
+        }
+        &--foobarCrafting {
+            background-color: $foobarCraftingColor;
+        }
+        &--shopping {
+            background-color: $shoppingColor; 
+        }
+        &--benching {
+            background-color: $benchingColor; 
+        }
+
+    }
     &FooMining {
         @include line($fooMiningColor)
+        
     }
     &BarMining {
         @include line($barMiningColor)    

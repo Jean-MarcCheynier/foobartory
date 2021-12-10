@@ -1,5 +1,4 @@
 import React from 'react';
-import { Stack } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { IRobot } from '../../../interfaces/Robot';
 import Robot from '../../robot/Robot';
