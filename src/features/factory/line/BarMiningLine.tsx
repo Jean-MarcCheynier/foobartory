@@ -4,7 +4,7 @@ import { LineEnum, mineBar as activity, selectBarMiners } from '../factorySlice'
 import Line from './Line';
 
 const mapStateToProps = (state: RootState, ownProps = {}) => ({
-  activityName: LineEnum.BAR_MINING,
+  activityName: "Bar mining",
   robotList: selectBarMiners(state)
 });
 

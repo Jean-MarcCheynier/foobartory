@@ -13,7 +13,7 @@ const actionCreators = {
 }
 
 const mapStateToProps = (state: RootState, ownProps = {}) => ({
-  activityName: LineEnum.FOOBAR_CRAFTING,
+  activityName: "Foobar Crafting",
   prod: selectProd,
   robotList: selectFoobarCrafters(state)
 });

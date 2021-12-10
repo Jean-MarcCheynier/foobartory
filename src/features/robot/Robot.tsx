@@ -34,7 +34,7 @@ const Robot: React.FC<IRobotProps> = (props) => {
   
   const pending = busy || changingActivity
   
-  return <Card className="m-2" style={{minHeight: '160px'}}>
+  return <Card style={{minHeight: '120px', width: '200px'}}>
     <div className={`text-center ${pending ? 'text-secondary' : 'text-primary'} my-3`}><FaRobot size={70} /></div>
     <div className="w-100 position-absolute bottom-0">
       {(pending) && <ProgressBar style={{ borderRadius: '0px'}} now={50} animated />}

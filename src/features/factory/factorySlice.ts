@@ -13,7 +13,8 @@ export enum LineEnum {
   FOO_MINING = 'fooMining',
   BAR_MINING = 'barMining',
   FOOBAR_CRAFTING = 'foobarCrafting',
-  SHOPPING = 'shopping' 
+  SHOPPING = 'shopping',
+  BENCH = 'bench'
 }
 
 export interface FactoryState {
@@ -22,43 +23,50 @@ export interface FactoryState {
     [LineEnum.FOO_MINING]: string[],
     [LineEnum.BAR_MINING]: string[],
     [LineEnum.FOOBAR_CRAFTING]: string[],
-    [LineEnum.SHOPPING]: string[]
+    [LineEnum.SHOPPING]: string[],
+    [LineEnum.BENCH]: string[],
+
   },
   prod: {
     foo: Foo[],
     bar: Bar[],
-    foobar: Foobar[],
-    robot: string[]
+    foobar: Foobar[]
   },
   workshop: {
-    craft: {foos: Foo[], bars: Bar[]}[]
+    craft: {foos: Foo[], bars: Bar[]}[],
+    craftAttempts: number
   }
 }
 
 const getInitialState = (): FactoryState => {
-  const robot1: IRobot = RobotFactory.createRobot(LineEnum.FOO_MINING);
-  const robot2: IRobot = RobotFactory.createRobot(LineEnum.BAR_MINING);
-  return {
+  const initialState:FactoryState  = {
     robotMap: {
-      [robot1.id]: robot1,
-      [robot2.id]: robot2,
     },
     line: {
-      [LineEnum.FOO_MINING]: [robot1.id, robot2.id],
+      [LineEnum.FOO_MINING]: [],
       [LineEnum.BAR_MINING]: [],
       [LineEnum.FOOBAR_CRAFTING]: [],
-      [LineEnum.SHOPPING]: []
+      [LineEnum.SHOPPING]: [],
+      [LineEnum.BENCH]: [],
     },
     prod: {
       foo: [],
       bar: [],
       foobar: [{}],
-      robot: []
     },
     workshop: {
-      craft: []
+      craft: [],
+      craftAttempts: 0
     }
   }
+
+  for(let i =0; i < rules.NB_ROBOTS_START; i++) {
+    let robot:IRobot = RobotFactory.createRobot();
+    initialState.robotMap[robot.id] = robot;
+    initialState.line[LineEnum.BENCH].push(robot.id)
+  }
+
+  return initialState
 };
 
 export const changeLine = createAsyncThunk(
@@ -145,6 +153,7 @@ export const factorySlice = createSlice({
         }else{
           const fooArray = state.prod.foo.splice(0, rules.FOOBAR_CRAFTING_PRICE_FOO);
           const barArray = state.prod.bar.splice(0, rules.FOOBAR_CRAFTING_PRICE_BAR);   
+          state.workshop.craftAttempts++ 
           state.workshop.craft.push({foos: fooArray, bars: barArray }) 
           state.robotMap[meta.arg.robot.id].busy = true;
         }
@@ -174,13 +183,13 @@ export const factorySlice = createSlice({
       })
       //Buy robot Line Reducers
       .addCase(buyRobot.fulfilled, (state, action) => {
-        if(state.prod.foobar.length <= rules.ROBOT_PRICE) {
+        if(state.prod.foobar.length < rules.ROBOT_PRICE) {
           throw Error("No craft present in the workshop")
         }else{  
           const newRobot = RobotFactory.createRobot();
           state.robotMap[newRobot.id] = newRobot;
-          state.prod.robot.push(newRobot.id)
-          state.prod.foobar.slice(0, rules.ROBOT_PRICE)
+          state.line[LineEnum.BENCH].push(newRobot.id)
+          state.prod.foobar.splice(0, rules.ROBOT_PRICE)
         }
       })
       //Change Line Reducers
@@ -223,6 +232,13 @@ export const selectShoppers = (state: RootState): IRobot[]  => {
     .map((robotId: string) => state.factory.robotMap[robotId])
 }
 
+export const selectBench = (state: RootState): IRobot[] => {
+  return state.factory.line[LineEnum.BENCH]
+    .map((robotId: string) => state.factory.robotMap[robotId])
+}
+
 export const selectProd = (state: RootState) => state.factory.prod;
+export const selectWorkshop = (state: RootState) => state.factory.workshop;
+export const selectAll = (state: RootState) => state.factory.robotMap;
 
 export default factorySlice.reducer;
