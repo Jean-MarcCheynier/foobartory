@@ -6,16 +6,15 @@ import Robot from '../../robot/Robot';
 import { LineEnum, changeLine } from '../factorySlice';
 
 export interface ILineProps {
-  direction?: "vertical"|"horizontal",
   activityName?: string,
   activity?: (args: {robot: IRobot}) => Promise<any>,
   changeLine?: (args: {robot: IRobot, line: LineEnum}) => Promise<any>,
   robotList: IRobot[]
 }
 
-const Line: React.FC<ILineProps> = ({ robotList, activity, activityName, changeLine, direction="vertical" }) => {
+const Line: React.FC<ILineProps> = ({ robotList, activity, activityName, changeLine }) => {
   
-  return (<Stack direction={direction} gap={1}>
+  return (<div className={"mx-auto my-1"}>
     { activityName && <h4 className="text-center w-100">{ activityName }</h4>}
     {robotList.map((robot, index) => (
       <Robot key={index} 
@@ -23,7 +22,7 @@ const Line: React.FC<ILineProps> = ({ robotList, activity, activityName, changeL
         action={activity} 
         changeLine={changeLine} />)
     )}
-  </Stack>)
+  </div>)
 }
 
 const actionCreator = {

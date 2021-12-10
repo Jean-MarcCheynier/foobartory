@@ -5,6 +5,7 @@ import FooMiningLine from './line/FooMiningLine';
 import FoobarCraftingLine from './line/FoobarCraftingLine';
 import ShoppingLine from './line/ShoppingLine';
 import BenchLine from './line/BenchLine';
+import styles from './Factory.module.scss'
 
 
 interface IFactoryProps {
@@ -13,19 +14,19 @@ interface IFactoryProps {
 const Factory: React.FC<IFactoryProps> = () => {
   return <>
     <Row className="h-75">
-      <Col className="text-primary">
+      <Col className={styles.LineFooMining}>
         <FooMiningLine/>
       </Col>
-      <Col className="text-warning">
+      <Col className={styles.LineBarMining}>
         <BarMiningLine/>
       </Col>
-      <Col className="text-danger">
+      <Col className={styles.LineFoobarCrafting}>
         <FoobarCraftingLine />
       </Col>
-      <Col>
+      <Col className={styles.LineShopping}>
         <ShoppingLine />
       </Col>
-      <Col>
+      <Col className={styles.LineBenching}>
         <BenchLine/>
       </Col>
     </Row>

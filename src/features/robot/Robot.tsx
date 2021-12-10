@@ -25,16 +25,13 @@ const Robot: React.FC<IRobotProps> = (props) => {
   };
 
   const onLineClicked = (line: LineEnum) => {
-    console.log("Changing line")
-    console.log(props);
-    console.log(line);
     if(changeLine)
       changeLine({robot: props, line})
   };
   
   const pending = busy || changingActivity
   
-  return <Card style={{minHeight: '120px', width: '200px'}}>
+  return <Card className="m-auto" style={{minHeight: '120px', width: '200px'}}>
     <div className={`text-center ${pending ? 'text-secondary' : 'text-primary'} my-3`}><FaRobot size={70} /></div>
     <div className="w-100 position-absolute bottom-0">
       {(pending) && <ProgressBar style={{ borderRadius: '0px'}} now={50} animated />}

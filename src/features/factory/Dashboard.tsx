@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { RootState } from '../../app/store';
 import { FactoryState, selectAll, selectProd, selectWorkshop } from './factorySlice';
-import { Row, Col } from 'react-bootstrap';
+import { Row, Col, Container } from 'react-bootstrap';
 
 type Prod = FactoryState['prod']
 type Workshop = FactoryState['workshop']
@@ -16,7 +16,8 @@ interface IDashboardProps {
 
 const Dashboard: React.FC<IDashboardProps> = ({prod, workshop, robotMap}) => {
   
-  return <Row>
+  return <Container className="fixed-bottom">
+  <Row className="text-center bg-secondary">
       <Col>
         <div><strong>{`Mined Foo : ${prod.foo.length}`}</strong></div>
       </Col>
@@ -26,12 +27,15 @@ const Dashboard: React.FC<IDashboardProps> = ({prod, workshop, robotMap}) => {
       <Col>
         <div><strong>{`Crafted Foobars: ${prod.foobar.length}`}</strong></div>
         <div><strong>{`Craft attempts: ${workshop.craftAttempts}`}</strong></div>
-        <div><strong>{`Crafting: ${workshop.craft.length}`}</strong></div>
+      </Col>
+      <Col>
+      
       </Col>
       <Col>
         <div><strong>{`Number of robots: ${Object.entries(robotMap).length}`}</strong></div>
       </Col>
   </Row>
+  </Container>
 }
 
 const mapStateToProp = (state: RootState) => ({

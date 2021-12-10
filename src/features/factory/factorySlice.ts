@@ -159,7 +159,6 @@ export const factorySlice = createSlice({
         }
       })
       .addCase(craftFoobar.fulfilled, (state, action) => {
-        alert('Crafted')
         const { robot } = action.meta.arg;
         if(state.workshop.craft.length <= 0) {
           throw Error("No craft present in the workshop")
@@ -170,7 +169,6 @@ export const factorySlice = createSlice({
         }
       })
       .addCase(craftFoobar.rejected, (state, action) => {
-        alert('Echec')
         const { robot } = action.meta.arg;
         if(state.workshop.craft.length <= 0) {
           throw Error("No craft present in the workshop")

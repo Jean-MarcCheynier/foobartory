@@ -19,8 +19,6 @@ const withConstraint = (WrappedComponent: typeof Line, constraint: IConstraint):
   ({ activity, ...rest}) => {
     const prod = useSelector(selectProd)
     const allowAction = useMemo(() => {
-      console.log("Constraint");
-      console.log(constraint(prod));
       return constraint(prod)?activity:undefined;
     },[prod, activity])
 
