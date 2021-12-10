@@ -8,7 +8,7 @@ const actionCreators = {
 }
 
 const mapStateToProps = (state: RootState, ownProps = {}) => ({
-  activityName: LineEnum.FOO_MINING,
+  activityName: "Foo mining",
   robotList: selectFooMiners(state)
 });
 

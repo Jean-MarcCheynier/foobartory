@@ -3,7 +3,7 @@ import { Foo } from "../../interfaces/Foo";
 import { rules } from "../../utils/rules";
 import { Foobar } from '../../interfaces/Foobar';
 import { IRobot } from '../../interfaces/Robot';
-import { v4 as uuidv4 } from 'uuid';
+import RobotFactory from './../../utils/RobotFactory';
 
 // A mock function to mimic making an async request for 'Foo' mining
 export function mineFoo() {
@@ -47,12 +47,7 @@ export function craftFoobar() {
 // A mock function to mimic making a request for 'Foobar' crafting
 export function buyRobot() {
   return new Promise<{ data: IRobot }>((resolve, reject) => {
-    const newRobot: IRobot = {
-      id: uuidv4(),
-      busy: false,
-      changingActivity: false
-    }
-    resolve({ data: newRobot })
+    resolve({ data: RobotFactory.createRobot() })
   });
 }
 

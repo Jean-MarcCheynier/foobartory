@@ -1,0 +1,29 @@
+@import "~bootstrap/scss/functions";
+@import '../../style/variables.scss';
+
+
+@mixin line($line-color) {
+    height: 100vh;
+    background-color: tint-color($line-color, 50%);
+    border: 1px solid $line-color; 
+    color: $line-color; 
+}
+
+.Line {
+    @include line($blue-300);
+    &FooMining {
+        @include line($blue-300)
+    }
+    &BarMining {
+        @include line($red-300)    
+    }
+    &FoobarCrafting {
+        @include line($purple-300) 
+    }
+    &Shopping {
+        @include line($green-400) 
+    }
+    &Benching {
+        @include line($gray-200) 
+    }
+}
