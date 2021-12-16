@@ -6,12 +6,16 @@ import FoobarCraftingLine from './line/FoobarCraftingLine';
 import ShoppingLine from './line/ShoppingLine';
 import BenchLine from './line/BenchLine';
 import styles from './Factory.module.scss'
+import { RootState } from '../../app/store';
+import { selectProd, selectAll } from './factorySlice';
+import { connect } from 'react-redux';
 
 
 interface IFactoryProps {
+  prod: any
 }
 
-const Factory: React.FC<IFactoryProps> = () => {
+const Factory: React.FC<IFactoryProps> = ({prod}) => {
   return <>
     <Row className="h-75">
       <Col className={styles.LineFooMining}>
@@ -33,4 +37,9 @@ const Factory: React.FC<IFactoryProps> = () => {
   </>
 }
 
-export default Factory;
+const mapStateToProps = (state: RootState) => ({ 
+  prod: selectProd(state),
+  robotMap: selectAll(state)
+})
+
+export default connect(mapStateToProps)(Factory);

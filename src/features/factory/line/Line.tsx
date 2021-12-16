@@ -1,33 +1,40 @@
 import React from 'react';
-import { Stack } from 'react-bootstrap';
 import { connect } from 'react-redux';
+import { RootState } from '../../../app/store';
 import { IRobot } from '../../../interfaces/Robot';
 import Robot from '../../robot/Robot';
 import { LineEnum, changeLine } from '../factorySlice';
 
 export interface ILineProps {
-  activityName?: string,
+  activityName?: LineEnum,
+  producing?: boolean,
   activity?: (args: {robot: IRobot}) => Promise<any>,
   changeLine?: (args: {robot: IRobot, line: LineEnum}) => Promise<any>,
   robotList: IRobot[]
 }
 
-const Line: React.FC<ILineProps> = ({ robotList, activity, activityName, changeLine }) => {
+const Line: React.FC<ILineProps> = ({ robotList, activity, producing, activityName, changeLine }) => {
+
+
   
-  return (<div className={"mx-auto my-1"}>
+  return (<div role="line" aria-label={`line-${activityName}`} className={"mx-auto my-1"}>
     { activityName && <h4 className="text-center w-100">{ activityName }</h4>}
     {robotList.map((robot, index) => (
       <Robot key={index} 
         {...robot} 
-        action={activity} 
+        action={producing?activity:undefined} 
         changeLine={changeLine} />)
     )}
   </div>)
 }
 
+const mapSateToProps = (state: RootState) => ({
+  producing: state.factory.producing
+})
+
 const actionCreator = {
   changeLine
 }
 
-export default connect(null, actionCreator )(Line);
+export default connect(mapSateToProps, actionCreator )(Line);
 

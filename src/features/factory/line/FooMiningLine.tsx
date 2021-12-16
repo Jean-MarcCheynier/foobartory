@@ -1,6 +1,6 @@
 import { connect } from "react-redux"
 import { RootState } from "../../../app/store";
-import { mineFoo as activity, LineEnum,  selectFooMiners } from '../factorySlice'
+import {LineEnum, mineFoo as activity, selectFooMiners } from '../factorySlice'
 import Line from './Line';
 
 const actionCreators = {
@@ -8,7 +8,7 @@ const actionCreators = {
 }
 
 const mapStateToProps = (state: RootState, ownProps = {}) => ({
-  activityName: "Foo mining",
+  activityName: LineEnum.FOO_MINING,
   robotList: selectFooMiners(state)
 });
 

@@ -1,0 +1,67 @@
+@import "~bootstrap/scss/functions";
+@import '../../style/variables.scss';
+
+
+.Robot {
+    border: none;
+    background-color: rgba(255, 255, 255, 0);
+    min-height: '120px';
+    width: '200px';
+
+    .Robot-icon {
+        text-align: center;
+        &--fooMining {
+            color: $fooMiningColor;
+        }
+        &--barMining {
+            color: $barMiningColor;  
+        }
+        &--foobarCrafting {
+            color: $foobarCraftingColor;
+        }
+        &--shopping {
+            color: $shoppingColor; 
+        }
+        &--benching {
+            color: $benchingColor; 
+        }
+        &--changing {
+            color: $gray-300 
+        }
+    }
+    .ButtonGroup {
+        width: 100%;
+        .Button {
+            border-radius: 0px;
+            width: 50%  ;
+            &:disabled {
+                background-color: $gray-300;
+            }
+            &--fooMining {
+                border: 1px solid  $fooMiningColor;
+                border-top-left-radius: 2px;
+                background-color: $fooMiningColor;
+            }
+            &--barMining {
+                border: 1px solid  $barMiningColor;
+                border-top-right-radius: 2px;
+                background-color: $barMiningColor;  
+            }
+            &--foobarCrafting {
+                border: 1px solid  $foobarCraftingColor;
+                border-bottom-left-radius: 2px;
+                background-color: $foobarCraftingColor;
+            }
+            &--shopping {
+                border: 1px solid  $shoppingColor;
+                border-bottom-right-radius: 2px;
+                background-color: $shoppingColor; 
+            }
+            &--benching {
+                background-color: $benchingColor; 
+            }
+
+        }
+    }
+
+}

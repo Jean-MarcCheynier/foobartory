@@ -1,0 +1,45 @@
+@keyframes spin {
+    from {
+        transform:rotate(0deg);
+    }
+    to {
+        transform:rotate(360deg);
+    }
+}
+
+@keyframes mineIn {
+    from {
+        transform:rotate(0deg);
+    }
+    to {
+        transform:rotate(30deg);
+    }
+}
+
+@keyframes mineOut {
+    from {
+        transform:rotate(30deg);
+    }
+    to {
+        transform:rotate(0deg);
+    }
+}
+
+.RobotIcon{
+
+    text-align: center;
+    position: absolute;
+    right: calc( 50% - 50px); 
+    
+    &--fooMining, &--barMining {
+        font-size: 30px;
+        animation-name: mineIn, mineOut;
+        animation-duration: 300ms, 700ms;
+        animation-delay: 0ms, 300ms; /* add this */
+        animation-timing-function: ease-in, ease-out;
+        animation-iteration-count: infinite, infinite;
+    }
+    &--spinning {
+        animation: spin 1s infinite linear;    
+    }
+}

@@ -3,7 +3,10 @@
 
 
 @mixin line($line-color) {
-    height: 100vh;
+    height: calc( 100vh - 50px);
+    overflow-y: scroll;
+    scrollbar-color: $secondary $line-color;
+    scrollbar-width: thin;
     background-color: tint-color($line-color, 50%);
     border: 1px solid $line-color; 
     color: $line-color; 
@@ -12,18 +15,18 @@
 .Line {
     @include line($blue-300);
     &FooMining {
-        @include line($blue-300)
+        @include line($fooMiningColor)
     }
     &BarMining {
-        @include line($red-300)    
+        @include line($barMiningColor)    
     }
     &FoobarCrafting {
-        @include line($purple-300) 
+        @include line($foobarCraftingColor) 
     }
     &Shopping {
-        @include line($green-400) 
+        @include line($shoppingColor) 
     }
     &Benching {
-        @include line($gray-200) 
+        @include line($benchingColor) 
     }
 }

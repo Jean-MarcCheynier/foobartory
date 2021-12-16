@@ -1,22 +1,19 @@
 import { connect } from "react-redux"
 import { RootState } from "../../../app/store";
-import { LineEnum, buyRobot as activity, selectShoppers } from '../factorySlice'
+import { buyRobot as activity, selectShoppers, canBuyRobot, LineEnum } from '../factorySlice'
 import Line from './Line';
-import { rules } from './../../../utils/rules';
-import withConstraint, { IConstraint } from './withConstraint';
-
-const shoppingConstraint: IConstraint = prod => (prod.foobar.length >= rules.ROBOT_PRICE )
-
+import withConstraint from './withConstraint';
+import { buyRobot } from './../factorySlice';
 
 const actionCreators = {
   activity
 }
 
 const mapStateToProps = (state: RootState, ownProps = {}) => ({
-  activityName: "Robot Shop",
+  activityName: LineEnum.SHOPPING,
   robotList: selectShoppers(state)
 });
 
-const ShoppingLine = connect(mapStateToProps, actionCreators)(withConstraint(Line, shoppingConstraint))
+const ShoppingLine = connect(mapStateToProps, actionCreators)(withConstraint(Line, canBuyRobot))
 
 export default ShoppingLine;
