@@ -7,7 +7,7 @@ import ShoppingLine from './line/ShoppingLine';
 import BenchLine from './line/BenchLine';
 import styles from './Factory.module.scss'
 import { RootState } from '../../app/store';
-import { selectProd } from './factorySlice';
+import { selectProd, selectAll } from './factorySlice';
 import { connect } from 'react-redux';
 
 
@@ -37,6 +37,9 @@ const Factory: React.FC<IFactoryProps> = ({prod}) => {
   </>
 }
 
-const mapStateToProps = (state: RootState) => ({ prod: selectProd(state)})
+const mapStateToProps = (state: RootState) => ({ 
+  prod: selectProd(state),
+  robotMap: selectAll(state)
+})
 
 export default connect(mapStateToProps)(Factory);

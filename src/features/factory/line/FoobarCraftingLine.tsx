@@ -1,6 +1,6 @@
 import { connect } from "react-redux"
 import { RootState } from "../../../app/store";
-import { craftFoobar as activity, selectFoobarCrafters, selectProd } from '../factorySlice'
+import { LineEnum, craftFoobar as activity, selectFoobarCrafters, selectProd } from '../factorySlice'
 import Line from './Line';
 import { canCraftFoobar } from './../factorySlice';
 import withConstraint from "./withConstraint";
@@ -10,7 +10,7 @@ const actionCreators = {
 }
 
 const mapStateToProps = (state: RootState, ownProps = {}) => ({
-  activityName: "Foobar Crafting",
+  activityName: LineEnum.FOOBAR_CRAFTING,
   prod: selectProd,
   robotList: selectFoobarCrafters(state)
 });

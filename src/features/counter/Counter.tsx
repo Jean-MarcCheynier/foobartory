@@ -1,69 +1,47 @@
-import React, { useState } from 'react';
-
-import { useAppSelector, useAppDispatch } from '../../app/hooks';
+import React from 'react';
 import {
-  decrement,
-  increment,
-  incrementByAmount,
-  incrementAsync,
-  incrementIfOdd,
+  startCounter,
+  stopCounter,
   selectCount,
 } from './counterSlice';
-import styles from './Counter.module.css';
-import { Button } from 'react-bootstrap';
+import { RootState } from '../../app/store';
+import { connect } from 'react-redux';
 
-export function Counter() {
-  const count = useAppSelector(selectCount);
-  const dispatch = useAppDispatch();
-  const [incrementAmount, setIncrementAmount] = useState('2');
+interface ICountProps {
+  count: number, 
+  start: boolean,
+  startCounter: () => void,
+  stopCounter: () => void
+} 
 
-  const incrementValue = Number(incrementAmount) || 0;
+const Counter: React.FC<ICountProps> = ({count, start, startCounter, stopCounter}) => {
 
+  const mm = Math.round(count/60).toString();
+  const ss = (count%60).toString();
+  const displayDigits = (s: string) => {
+    if(s.length === 0) {
+      return "00"
+    } else if(s.length === 1) {
+      return `0${s}`
+    } else {
+      return s
+    }
+  }
   return (
-    <div>
-      <div className={styles.row}>
-        <Button
-          variant="primary"
-          aria-label="Decrement value"
-          onClick={() => dispatch(decrement())}
-        >
-          -
-        </Button>
-        <span className={styles.value}>{count}</span>
-        <button
-          className={styles.button}
-          aria-label="Increment value"
-          onClick={() => dispatch(increment())}
-        >
-          +
-        </button>
-      </div>
-      <div className={styles.row}>
-        <input
-          className={styles.textbox}
-          aria-label="Set increment amount"
-          value={incrementAmount}
-          onChange={(e) => setIncrementAmount(e.target.value)}
-        />
-        <button
-          className={styles.button}
-          onClick={() => dispatch(incrementByAmount(incrementValue))}
-        >
-          Add Amount
-        </button>
-        <button
-          className={styles.asyncButton}
-          onClick={() => dispatch(incrementAsync(incrementValue))}
-        >
-          Add Async
-        </button>
-        <button
-          className={styles.button}
-          onClick={() => dispatch(incrementIfOdd(incrementValue))}
-        >
-          Add If Odd
-        </button>
-      </div>
-    </div>
+    <strong className='test-primary'>
+      {`${displayDigits(mm)}:${displayDigits(ss)}` }
+    </strong>
   );
 }
+
+const mapStateToProps = (state: RootState) => ({
+  start: state.factory.producing,
+  count: selectCount(state)
+})
+
+const actionCreator = {
+  startCounter,
+  stopCounter
+}
+
+export default connect(mapStateToProps, actionCreator)(Counter)
