@@ -15,8 +15,6 @@ export interface ILineProps {
 
 const Line: React.FC<ILineProps> = ({ robotList, activity, producing, activityName, changeLine }) => {
 
-
-  
   return (<div role="line" aria-label={`line-${activityName}`} className={"mx-auto my-1"}>
     { activityName && <h4 className="text-center w-100">{ activityName }</h4>}
     {robotList.map((robot, index) => (

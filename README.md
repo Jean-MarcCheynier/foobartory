@@ -1,5 +1,30 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app), using the [Redux](https://redux.js.org/) and [Redux Toolkit](https://redux-toolkit.js.org/) template.
 
+## Implementation
+
+***
+### Rules  
+Rules parameter are accessible in src/utils/rules.ts  
+The mechanism of the game is implmented at the level of redux thunks.
+### Features
+ 
+- Robot   
+    Robot is a rather simple feature. A Robot.tsx is a simple component that has the capacity to work when it's not busy and to go to a diffenrent production line.
+    It receives as props :
+    - data representing the robot, its state, its current activity (see interface IRobot)
+    - a function **activity** that is called by the robot when it's working
+    - a function **changeLine** that is called by the robot to move to a different production line
+- Factory  
+    The main feature **Factory** represents the factory. The component **Factory** contains 5 **Line** components representing the production lines.  
+    Each HOC (FooMiningLine, BarMiningLine, FoobarCraftingLine... ) are are composition of a Line component. They specialize a Line component adding a constraint and a specific activity to the production line.  
+    IE: FoobarCraftingLine binds the action **craftFoobar** to the props of the Line component and adds the constraint **canCraftFoobar** to enforce the rules of the game.
+
+- Counter  
+Implements the counter. 
+
+- Modal  
+Displays the modals 'rules' and 'victory'
+
 ## Available Scripts
 
 In the project directory, you can run:
