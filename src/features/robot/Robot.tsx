@@ -1,5 +1,5 @@
 import React, {useEffect, useCallback, useRef} from 'react';
-import { Button, ButtonGroup, Card } from 'react-bootstrap';
+import { ButtonGroup, Card } from 'react-bootstrap';
 import { IRobot } from '../../interfaces/Robot';
 import { LineEnum } from '../factory/factorySlice';
 import { FaRobot } from 'react-icons/fa';

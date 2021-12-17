@@ -3,7 +3,6 @@ import { RootState } from "../../../app/store";
 import { buyRobot as activity, selectShoppers, canBuyRobot, LineEnum } from '../factorySlice'
 import Line from './Line';
 import withConstraint from './withConstraint';
-import { buyRobot } from './../factorySlice';
 
 const actionCreators = {
   activity

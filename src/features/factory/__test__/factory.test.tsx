@@ -3,12 +3,10 @@ import { render, fireEvent, waitFor, screen, within } from '../../../utils/test-
 import '@testing-library/jest-dom'
 
 import Factory from './../Factory';
-import { RootState } from '../../../app/store';
 import { rules } from './../../../utils/rules';
 import { LineEnum } from '../factorySlice';
 import RobotFactory from './../../../utils/RobotFactory';
 import App from '../../../App';
-import { resolve } from 'dns';
 
 
 test('Start the game - First move', async () => {
