@@ -2,12 +2,17 @@ import React from 'react'
 import { render as rtlRender } from '@testing-library/react'
 import { Provider } from 'react-redux'
 // Import your own reducer
-import { store } from '../app/store';
+import { reducer } from '../app/store'
+import { configureStore } from '@reduxjs/toolkit';
 
 function render(
   ui: any,
   {
     preloadedState,
+    store = configureStore({
+      reducer,
+      preloadedState
+    }),
     ...renderOptions
   }: any = {}
 ) {

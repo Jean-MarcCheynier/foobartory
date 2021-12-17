@@ -21,19 +21,19 @@ const Dashboard: React.FC<IDashboardProps> = ({prod, workshop, robotMap}) => {
   return <Container className="fixed-bottom">
   <Row className="text-center bg-secondary">
       <Col>
-        <div><strong>{`FOO : ${prod.foo.length}`}</strong></div>
+        <div><strong>FOO : <span role="counter" aria-label='foo count'>{prod.foo.length}</span></strong></div>
       </Col>
       <Col>
-        <div><strong>{`BAR: ${prod.bar.length}`}</strong></div>
+        <div><strong>BAR:  <span role="counter" aria-label='bar count'>{prod.bar.length}</span></strong></div>
       </Col>
       <Col>
-        <div><strong>{`FOOBAR: ${prod.foobar.length}`}</strong></div>
+        <div><strong>FOOBAR: <span role="counter" aria-label='foobar count'>{prod.foobar.length}</span></strong></div>
       </Col>
       <Col>
-        <div><strong>{`PRICE (FOOBAR): ${rules.ROBOT_PRICE}`}</strong></div>
+        <div><strong>PRICE (FOOBAR): <span role="label" aria-label='foobar price'>{rules.ROBOT_PRICE}</span></strong></div>
       </Col>
       <Col>
-        <div><strong>{`Number of robots: ${Object.entries(robotMap).length} / ${rules.VICTORY}`}</strong></div>
+        <div><strong>Number of robots: <span role="counter" aria-label='robot count'>{`${Object.entries(robotMap).length} / ${rules.VICTORY}`}</span></strong></div>
 
       </Col>
   </Row>
