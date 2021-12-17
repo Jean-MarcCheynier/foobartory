@@ -3,6 +3,7 @@
   "author": {
     "name": "Jean-Marc Cheynier"
   },
+  "homepage" : "https://jean-marccheynier.github.io/foobartory/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
